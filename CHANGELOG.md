@@ -8,6 +8,13 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [2.1.0] - 2021-05-26
+
+### Changed
+* Add support for mutlitenant Azure AD apps that use client credentials flow. 
+  This is done by giving an ability to override provider options to change the 
+  auth URL
+
 ## [2.0.0] - 2021-04-09
 
 ### Changed
