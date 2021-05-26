@@ -25,6 +25,7 @@ func (b *backend) configSelfReadOperation(ctx context.Context, req *logical.Requ
 		Data: map[string]interface{}{
 			"token_url_params": entry.Config.TokenURLParams,
 			"scopes":           entry.Config.Scopes,
+			"provider_options": entry.Config.ProviderOptions,
 		},
 	}
 	return resp, nil
