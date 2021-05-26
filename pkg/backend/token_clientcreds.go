@@ -25,7 +25,7 @@ func (b *backend) updateClientCredsToken(ctx context.Context, storage logical.St
 			return nil
 		}
 
-		c, err := b.getCache(ctx, storage)
+		c, err := b.getCache(ctx, storage, candidate.Config.ProviderOptions)
 		if err != nil {
 			return err
 		} else if c == nil {

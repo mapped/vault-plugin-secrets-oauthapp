@@ -31,16 +31,17 @@ func (b *backend) configSelfReadOperation(ctx context.Context, req *logical.Requ
 }
 
 func (b *backend) configSelfUpdateOperation(ctx context.Context, req *logical.Request, data *framework.FieldData) (*logical.Response, error) {
-	c, err := b.getCache(ctx, req.Storage)
+	entry := &persistence.ClientCredsEntry{}
+	entry.Config.TokenURLParams = data.Get("token_url_params").(map[string]string)
+	entry.Config.Scopes = data.Get("scopes").([]string)
+	entry.Config.ProviderOptions = data.Get("provider_options").(map[string]string)
+
+	c, err := b.getCache(ctx, req.Storage, entry.Config.ProviderOptions)
 	if err != nil {
 		return nil, err
 	} else if c == nil {
 		return logical.ErrorResponse("not configured"), nil
 	}
-
-	entry := &persistence.ClientCredsEntry{}
-	entry.Config.TokenURLParams = data.Get("token_url_params").(map[string]string)
-	entry.Config.Scopes = data.Get("scopes").([]string)
 
 	tok, err := c.Provider.Private(c.Config.ClientID, c.Config.ClientSecret).ClientCredentials(
 		ctx,
