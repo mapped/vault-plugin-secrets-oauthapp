@@ -97,6 +97,10 @@ var configSelfFields = map[string]*framework.FieldSchema{
 		Type:        framework.TypeCommaStringSlice,
 		Description: "The scopes to request for authorization.",
 	},
+	"provider_options": {
+		Type:        framework.TypeKVPairs,
+		Description: "Override for provider options.",
+	},
 }
 
 const configSelfHelpSynopsis = `
