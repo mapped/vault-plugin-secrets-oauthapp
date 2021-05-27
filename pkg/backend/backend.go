@@ -83,3 +83,8 @@ func Factory(ctx context.Context, conf *logical.BackendConfig) (logical.Backend,
 	}
 	return b, nil
 }
+
+// TODO: Remove this
+func (b *backend) GetLogger() hclog.Logger {
+	return b.logger
+}

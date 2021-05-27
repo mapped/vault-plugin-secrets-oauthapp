@@ -2,6 +2,7 @@ package backend
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/hashicorp/vault/sdk/logical"
 	"github.com/puppetlabs/vault-plugin-secrets-oauthapp/v2/pkg/persistence"
@@ -56,6 +57,11 @@ func (b *backend) getCache(ctx context.Context, storage logical.Storage, provide
 			for k, v := range providerOptionsOverride[0] {
 				cfg.ProviderOptions[k] = v
 			}
+		}
+
+		// TODO: Remove logging
+		for k, v := range cfg.ProviderOptions {
+			b.GetLogger().Info(fmt.Sprintf("cfg.ProviderOptions %s=%s", k, v))
 		}
 
 		cache, err := newCache(cfg, b.providerRegistry)
