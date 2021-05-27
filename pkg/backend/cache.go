@@ -39,6 +39,7 @@ func (b *backend) getCache(ctx context.Context, storage logical.Storage, provide
 	b.mut.Lock()
 	defer b.mut.Unlock()
 
+	var cache *cache
 	if b.cache == nil {
 		cfg, err := b.data.Managers(storage).Config().ReadConfig(ctx)
 		if err != nil || cfg == nil {
@@ -53,8 +54,10 @@ func (b *backend) getCache(ctx context.Context, storage logical.Storage, provide
 		// In cases when using one multitentant app it's
 		// convenient to write clientId and clientSecret once
 		// and override tenant id for different tenants.
+		doNotCache := false
 		if len(providerOptionsOverride) > 0 {
 			for k, v := range providerOptionsOverride[0] {
+				doNotCache = true // Cannot cache providers with options override
 				cfg.ProviderOptions[k] = v
 			}
 		}
@@ -64,12 +67,14 @@ func (b *backend) getCache(ctx context.Context, storage logical.Storage, provide
 			b.GetLogger().Info(fmt.Sprintf("cfg.ProviderOptions %s=%s", k, v))
 		}
 
-		cache, err := newCache(cfg, b.providerRegistry)
+		cache, err = newCache(cfg, b.providerRegistry)
 		if err != nil {
 			return nil, err
 		}
 
-		b.cache = cache
+		if doNotCache {
+			b.cache = cache
+		}
 	}
 
 	return b.cache, nil
